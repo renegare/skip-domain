@@ -1,6 +1,6 @@
 <?php
 
-namespace Lib\Model;
+namespace Skip\Model;
 
 /**
  * @todo explain

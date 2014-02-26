@@ -10,17 +10,28 @@ class FileFinderTest extends \PHPUnit_Framework_TestCase {
 	 * test getModelClassList method
 	 */
 	public function testGetModelClassList() {
+		$mockPath = '/mock-existent-path';
 		$mockClassList = array(
-			'Mock\Namespace\ModelClassA',
-			'Mock\Namespace\ModelClassB',
-			'Mock\Namespace\ModelClassC'
+			'model.class.a' => 'Mock\Namespace\ModelClassA',
+			'model.class.b' => 'Mock\Namespace\ModelClassB',
+			'model.class.c' => 'Mock\Namespace\ModelClassC'
 			);
-		$mockIterator = new \ArrayIterator($mockClassList);
+		$mockFileList = array(
+			new \SplFileInfo($mockPath . '/ModelClassA'),
+			new \SplFileInfo($mockPath . '/ModelClassB'),
+			new \SplFileInfo($mockPath . '/ModelClassC')
+			);
+		$mockIterator = new \ArrayIterator($mockFileList);
 
 		$finder = new FileFinder();
 		$finder->setNamespace('Mock\Namespace');
+		$finder->setBasePath($mockPath);
 
-		$symfonyFinder = $this->getMock('Symfony\Component\Finder\Finder');
+		$symfonyFinder = $this->getMock('Symfony\Component\Finder\Finder', array(
+			'files', 
+			'in', 
+			'name',
+			'getIterator'), array(), '', FALSE);
 
 		$symfonyFinder->expects($this->once())
 			->method('files')
@@ -44,15 +55,15 @@ class FileFinderTest extends \PHPUnit_Framework_TestCase {
 			->method('getIterator')
 			->will($this->returnValue($mockIterator));
 
-		$finder = $finder->setFileFinder($symfonyFinder);
+		$finder->setFileFinder($symfonyFinder);
 
-		$finder->setBasePath('/mock-existent-path');
 
 		$classList = $finder->getModelClassList();
 
 		$this->assertEquals($mockIterator->count(), count($classList));
-		foreach($classList as $file) {
-			$this->assertTrue(in_array($file, $mockClassList));
+		foreach($mockClassList as $key => $classPath) {
+			$this->assertArrayHasKey($key, $classList);
+			$this->assertEquals($classPath, $classList[$key]);
 		}
 	}
 }

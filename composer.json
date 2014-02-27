@@ -1,7 +1,7 @@
 {
 	"name": "renegare/skip-model",
 	"type": "library",
-
+	"license": "BWL",
 	"autoload": {
 		"psr-4" : {
 			"Skip\\Model\\" : "src/"

@@ -89,15 +89,15 @@ class Manager {
 	 */
 	public function setModelStorageHandler(ModelStorageHandlerInterface $handler, $storageName = null) {
 		if(!$storageName) {
-			if(!$this->defaultStorageHandler) {
-				$this->setDefaultStorageHandler($handler);
-			} else {
-				$this->anonymousHandlerCount += 1;
-				$this->setModelStorageHandler($handler, 'storage.handler.' . $this->anonymousHandlerCount);
-			}
-		} else {
-			$this->modelStorageHandlers[$storageName] = $handler;
+			$this->anonymousHandlerCount += 1;
+			$storageName = 'storage.handler.' . $this->anonymousHandlerCount;
 		}
+		
+		if(!$this->defaultStorageHandler) {
+			$this->setDefaultStorageHandler($handler);
+		}
+
+		$this->modelStorageHandlers[$storageName] = $handler;
 	}
 
 	/**
@@ -105,7 +105,6 @@ class Manager {
 	 */
 	public function setDefaultStorageHandler(ModelStorageHandlerInterface $handler) {
 		$this->defaultStorageHandler = $handler;
-		$this->setModelStorageHandler($handler, 'default');
 	}
 
 	/**

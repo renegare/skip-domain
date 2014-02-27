@@ -38,8 +38,9 @@ class ManagerTest extends \PHPUnit_Framework_TestCase {
 	 */
 	public function testGetModelsWithMultipleStorageHandlers() {
 
-		$mockStorageHandlerDefault = $this->getMock('Skip\Model\ModelStorageHandlerInterface', array(), array(), '', FALSE);
-		$mockStorageHandlerCustom = $this->getMock('Skip\Model\ModelStorageHandlerInterface', array(), array(), '', FALSE);
+		$mockStorageHandlerDefault = $this->getMock('Skip\Model\ModelStorageHandlerInterface');
+		$mockStorageHandlerCustom = $this->getMock('Skip\Model\ModelStorageHandlerInterface');
+		$this->assertNotSame($mockStorageHandlerDefault, $mockStorageHandlerCustom);
 
 		$mockModelA = $this->getMock('Skip\Model\ModelInterface', array('setStorageHandler'), array(), '', FALSE);
 		$mockModelA->expects($this->once())
@@ -84,9 +85,21 @@ class ManagerTest extends \PHPUnit_Framework_TestCase {
 		$manager->setModelToStorageHandlerMap(array(
 			'model.class.b' => 'storage.handler.b'
 			));
+
 		$modelA = $manager->get('model.class.a');
 		$modelB = $manager->get('model.class.b');
 
 		$this->assertNotSame($modelA, $modelB);
+	}
+
+
+
+	/**
+	 * test get method model for unregisterd model
+	 * @expectedException ModelNotFoundException
+	 */
+	public function testGetInvalidModel() {
+		$manager = new Manager();
+		$manager->get('unknown.model');
 	}
 }

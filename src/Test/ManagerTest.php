@@ -92,14 +92,37 @@ class ManagerTest extends \PHPUnit_Framework_TestCase {
 		$this->assertNotSame($modelA, $modelB);
 	}
 
-
-
 	/**
 	 * test get method model for unregisterd model
-	 * @expectedException ModelNotFoundException
+	 * @expectedException Skip\Model\ModelNotFoundException
 	 */
 	public function testGetInvalidModel() {
 		$manager = new Manager();
+
+		$mockFinder = $this->getMock('Skip\Model\ModelFinderInterface', array('getModelClassList'), array(), '', FALSE);
+		$mockFinder->expects($this->once())
+			->method('getModelClassList')
+			->will($this->returnValue(array()));
+		$manager->setFinder($mockFinder);
+
 		$manager->get('unknown.model');
+	}
+
+	/**
+	 * test get method model for unregisterd model
+	 * @expectedException Skip\Model\StorageHandlerNotFoundException
+	 */
+	public function testGetModelWithNoStorageHandler() {
+		$manager = new Manager();
+
+		$mockModel = $this->getMock('Skip\Model\ModelInterface', array('setStorageHandler'), array(), '', FALSE);
+		$mockModelClass = get_class($mockModel);
+		$mockFinder = $this->getMock('Skip\Model\ModelFinderInterface', array('getModelClassList'), array(), '', FALSE);
+		$mockFinder->expects($this->once())
+			->method('getModelClassList')
+			->will($this->returnValue(array('model.class.a' => $mockModelClass)));
+		$manager->setFinder($mockFinder);
+
+		$manager->get('model.class.a');
 	}
 }

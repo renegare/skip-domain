@@ -55,7 +55,7 @@ class Manager {
 		}
 
 		if(!isset($this->modelClassList[$modelName])) {
-			throw new \Exception(sprintf('No model found registered under the name %s', $modelName));
+			throw new ModelNotFoundException(sprintf('No model found registered under the name %s', $modelName));
 		}
 
 		return $this->modelClassList[$modelName];
@@ -126,7 +126,7 @@ class Manager {
 		}
 
 		if(!$handler) {
-			throw new \Exception(sprintf("No storage handler can be found for the model '%s'", $modelName));
+			throw new StorageHandlerNotFoundException(sprintf("No storage handler can be found for the model '%s'", $modelName));
 		}
 
 		return $handler;

@@ -16,6 +16,6 @@ class ModelProviderTest extends \PHPUnit_Framework_TestCase {
 
 		$modelManager = $app['model'];
 
-		$this->assertInstanceOf('Skip\Model\ModelManager', $modelManager);
+		$this->assertInstanceOf('Skip\Model\Manager', $modelManager);
 	}
 }

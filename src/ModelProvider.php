@@ -18,11 +18,11 @@ class ModelProvider implements ServiceProviderInterface {
 			$storageHandlerServices = $app['model.storage.handlers'];
 
 			if(!is_array($storageHandlerServices)) {
-				throw new \Exception("Service 'model.storage.handlers' must contain an array of storage handlers");
+				throw new \InvalidArgumentException("Service 'model.storage.handlers' must be an array of storage handlers");
 			}
 
 			if(!count($storageHandlerServices)) {
-				throw new StorageHandlerNotFoundException("No storage handler service(s) found. Please register atleast one.");
+				throw new \InvalidArgumentException("Service 'model.storage.handlers' contains no storage handler service(s). Please register atleast one.");
 			}
 
 			foreach($storageHandlerServices as $storageHandlerName => $storageHandlerService) {
@@ -33,9 +33,7 @@ class ModelProvider implements ServiceProviderInterface {
 			}
 
 			$storageMap = isset($app['model.storage.handler.map']) ? $app['model.storage.handler.map'] : array();
-			foreach($storageMap as $modelName => $handlerService) {
-				$manager->setModelHandlerOverride($modelName, $app[$handlerService]);
-			}
+			$manager->setModelToStorageHandlerMap($storageMap);
 
 			return $manager;
 		};

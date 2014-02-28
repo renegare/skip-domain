@@ -9,9 +9,14 @@ php:
   - 5.5
   - 5.4
 
+env:
+  - SILEX_VERSION=1.0.*
+  - SILEX_VERSION=1.1.*
+  - SILEX_VERSION=dev-master
+
 before_script:
   - php -r "eval('?>'.file_get_contents('https://getcomposer.org/installer'));"
-  - php composer.phar update --prefer-source
+  - php composer.phar require --dev --prefer-source silex/silex:${SILEX_VERSION}
 
 script: vendor/bin/phpunit --coverage-text
 

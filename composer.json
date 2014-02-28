@@ -1,13 +1,19 @@
 {
 	"name": "renegare/skip-model",
 	"type": "library",
-	"version": "0.0.0",
+	"license": "BWL",
 	"autoload": {
 		"psr-4" : {
 			"Skip\\Model\\" : "src/"
 		}
 	},
+
+	"require": {
+		"symfony/finder": ">=2.4.1"
+	},
+
 	"require-dev": {
+        "silex/silex": "1.1.*",
 		"phpunit/phpunit": "3.7.*"
 	}
 }
